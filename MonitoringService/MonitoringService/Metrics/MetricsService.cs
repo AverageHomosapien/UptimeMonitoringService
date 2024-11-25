@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonitoringService.Metrics
 {
-    public class MetricsService
+    public class MetricsService : IMetricsService
     {
         private Queue<Metric> metricsQueue = new Queue<Metric>();
 

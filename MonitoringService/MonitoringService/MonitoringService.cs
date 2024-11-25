@@ -11,18 +11,22 @@ using MonitoringService.Metrics;
 
 namespace MonitoringService
 {
-    public class MonitoringService
+    public class MonitoringService : IMonitoringService
     {
-        private ILog log = LogManager.GetLogger(typeof(MonitoringService));
-        private HttpClient client = new HttpClient();
-        private Timer? backgroundTimer;
-        private Stopwatch sw = new Stopwatch();
-        private MetricsService metricsService = new MetricsService();
+        private readonly ILog log = LogManager.GetLogger(typeof(MonitoringService));
+        private readonly HttpClient client = new HttpClient();
+        private readonly Stopwatch sw = new Stopwatch();
+        private IMetricsService metricsService;
 
-        private int pollingInterval = 200;
+        private int pollingInterval = 500;
         // This is just one endpoint, but you can add more endpoints to monitor
-        private string endpoint = "/health_check";
-        private string siteUrl = "http://localhost:3000";
+        private const string endpoint = "/health_check";
+        private const string siteUrl = "http://localhost:3000";
+
+        public MonitoringService(IMetricsService metricsService)
+        {
+            this.metricsService = metricsService;
+        }
 
         public void Start()
         {
@@ -32,7 +36,7 @@ namespace MonitoringService
         private void StartPolling()
         {
             // Initialise a timer to poll every *pollingInterval* milliseconds
-            backgroundTimer = new Timer(Poll, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(pollingInterval));
+            Timer backgroundTimer = new Timer(Poll, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(pollingInterval));
             log.Info("Polling service started");
         }
 
@@ -45,7 +49,7 @@ namespace MonitoringService
             try
             {
                 Uri monitoredUri = new(siteUrl + endpoint);
-                sw.Restart(); 
+                sw.Restart();
                 await client.GetAsync(monitoredUri);
                 long responseTime = sw.ElapsedMilliseconds;
                 metricsService.AddResponseTimeMetric(endpoint, responseTime);

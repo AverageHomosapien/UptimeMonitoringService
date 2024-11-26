@@ -2,6 +2,6 @@
 {
     public interface IMetricsService
     {
-        void AddResponseTimeMetric(string endpointUrl, long responseTime);
+        void AddMetric(string endpointUrl, long responseTime);
     }
 }

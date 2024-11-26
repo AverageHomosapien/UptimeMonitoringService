@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Lightweight.Dependency.Injection;
+using log4net;
 using MonitoringService.Metrics;
 
 namespace MonitoringService
@@ -17,6 +18,11 @@ namespace MonitoringService
             DependencyManager.AddSingleton<IMetricsService, MetricsService>();
             DependencyManager.AddSingleton<IMonitoringService, MonitoringService>();
             DependencyManager.Build();
+        }
+
+        private void InitialiseLogging()
+        {
+    
         }
     }
 }

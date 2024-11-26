@@ -9,12 +9,23 @@ namespace MonitoringService.Metrics
     public class MetricsService : IMetricsService
     {
         private Queue<Metric> metricsQueue = new Queue<Metric>();
+        private int msBetweenProcessing = 1000;
 
-        public void AddResponseTimeMetric(string endpointUrl, long responseTime)
+        public void AddMetric(string endpointUrl, long responseTime)
         {
-            Metric metric = new Metric(endpointUrl, responseTime, MetricType.PollingInterval);
+            Metric metric = new(endpointUrl, responseTime, MetricType.PollingInterval);
             metricsQueue.Enqueue(metric);
             // TODO: Add a method of extracting metrics
+        }
+    
+        private void StartMetricQueueIngestion()
+        {
+            while (true)
+            {
+
+
+                Thread.Sleep(msBetweenProcessing);
+            }
         }
     }
 }

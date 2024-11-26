@@ -17,6 +17,7 @@ namespace MonitoringService
         private readonly HttpClient client = new HttpClient();
         private readonly Stopwatch sw = new Stopwatch();
         private IMetricsService metricsService;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private int pollingInterval = 500;
         // This is just one endpoint, but you can add more endpoints to monitor
@@ -26,6 +27,7 @@ namespace MonitoringService
         public MonitoringService(IMetricsService metricsService)
         {
             this.metricsService = metricsService;
+            cancellationTokenSource.CancelAfter(5000);
         }
 
         public void Start()
@@ -50,9 +52,9 @@ namespace MonitoringService
             {
                 Uri monitoredUri = new(siteUrl + endpoint);
                 sw.Restart();
-                await client.GetAsync(monitoredUri);
+                await client.GetAsync(monitoredUri, cancellationTokenSource.Token);
                 long responseTime = sw.ElapsedMilliseconds;
-                metricsService.AddResponseTimeMetric(endpoint, responseTime);
+                metricsService.AddMetric(endpoint, responseTime);
             }
             catch (Exception ex)
             {

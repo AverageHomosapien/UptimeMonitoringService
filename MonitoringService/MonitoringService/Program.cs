@@ -10,5 +10,4 @@ IMonitoringService monitoringService = dependencyRegistration.DependencyManager.
 monitoringService.Start();
 
 
-Thread.Sleep(10000);
 Console.WriteLine("Done..");

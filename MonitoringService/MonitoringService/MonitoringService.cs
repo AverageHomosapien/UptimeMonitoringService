@@ -16,7 +16,7 @@ namespace MonitoringService
         private readonly ILog log = LogManager.GetLogger(typeof(MonitoringService));
         private readonly HttpClient client = new HttpClient();
         private readonly Stopwatch sw = new Stopwatch();
-        private IMetricsService metricsService;
+        private readonly IMetricsService metricsService;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private int pollingInterval = 500;
@@ -35,30 +35,29 @@ namespace MonitoringService
             StartPolling();
         }
 
-        private void StartPolling()
-        {
-            // Initialise a timer to poll every *pollingInterval* milliseconds
-            Timer backgroundTimer = new Timer(Poll, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(pollingInterval));
-            log.Info("Polling service started");
-        }
-
         /// <summary>
         /// Poll the endpoint and add the response time to the metrics queue
         /// </summary>
         /// <param name="state"></param>
-        private async void Poll(object? state)
+        private async void StartPolling()
         {
-            try
+            log.Info("Polling service started");
+            while (true)
             {
-                Uri monitoredUri = new(siteUrl + endpoint);
-                sw.Restart();
-                await client.GetAsync(monitoredUri, cancellationTokenSource.Token);
-                long responseTime = sw.ElapsedMilliseconds;
-                metricsService.AddMetric(endpoint, responseTime);
-            }
-            catch (Exception ex)
-            {
-                log.Error("Unable to access the endpoint...", ex);
+                Thread.Sleep(pollingInterval);
+                try
+                {
+                    Uri monitoredUri = new(siteUrl + endpoint);
+                    sw.Restart();
+                    await client.GetAsync(monitoredUri, cancellationTokenSource.Token);
+                    long responseTime = sw.ElapsedMilliseconds;
+                    metricsService.AddMetric(endpoint, responseTime);
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Unable to access the endpoint...", ex);
+                    Thread.Sleep(5000);
+                }
             }
         }
     }

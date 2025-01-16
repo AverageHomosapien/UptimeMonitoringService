@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonitoringService.Alerts
 {
-    public enum AltertType
+    public enum AlertType
     {
         Email,
         SMS,

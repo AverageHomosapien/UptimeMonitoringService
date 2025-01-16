@@ -2,6 +2,6 @@
 {
     public interface IMonitoringService
     {
-        void Start();
+        Task Start();
     }
 }

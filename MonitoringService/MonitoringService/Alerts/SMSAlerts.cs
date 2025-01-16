@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonitoringService.Alerts
 {
-    public class TextAlerts : UserAlert
+    public class SMSAlerts : UserAlert
     {
         public void SendAlert(string message)
         {

@@ -30,16 +30,16 @@ namespace MonitoringService
             cancellationTokenSource.CancelAfter(5000);
         }
 
-        public void Start()
+        public async Task Start()
         {
-            StartPolling();
+            await StartPolling();
         }
 
         /// <summary>
         /// Poll the endpoint and add the response time to the metrics queue
         /// </summary>
         /// <param name="state"></param>
-        private async void StartPolling()
+        private async Task StartPolling()
         {
             log.Info("Polling service started");
             while (true)

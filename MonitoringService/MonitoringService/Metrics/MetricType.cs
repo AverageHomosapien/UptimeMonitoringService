@@ -8,6 +8,6 @@ namespace MonitoringService.Metrics
 {
     public enum MetricType
     {
-        PollingInterval,
+        ResponseTime,
     }
 }

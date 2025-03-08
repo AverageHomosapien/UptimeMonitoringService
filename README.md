@@ -14,6 +14,7 @@ cd UptimeMonitoringService
 ```
 ## Run the Services:
 - Start the monitoring service and the web interface. Ensure both are running and properly configured to communicate with each other.
+- To run the test UI Application NodeJS is a prequisite. Navigate to the BasicWebsite folder and run `node app.js`
 
 ## Usage
 - Access the Dashboard: Open your web browser and navigate to the URL where the web interface is hosted to view real-time monitoring data and analytics.
